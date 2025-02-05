@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Image, Text, View } from "react-native";
+import { Image, View } from "react-native";
 
 interface BorderMapProps {
     border: string
