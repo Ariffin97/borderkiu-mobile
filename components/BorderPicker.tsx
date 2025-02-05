@@ -9,7 +9,7 @@ type BorderSelectorProps = {
 
 export default function BorderPicker({ borders, selectedBorder,setSelectedBorder }: BorderSelectorProps) {
     return (
-        <View className='flex content-center border border-black p-2'>
+        <View className='border'>
             <Picker
                 selectedValue={selectedBorder}
                 onValueChange={(value) => setSelectedBorder(value)}
