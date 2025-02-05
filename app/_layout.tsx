@@ -1,14 +1,14 @@
 import React from 'react';
 import { Drawer } from 'expo-router/drawer';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { DrawerNavigationProps } from '../types';
-import { HamburgerMenu } from './components/HamburgerMenu';
+import HamburgerMenu from '@/components/HamburgerMenu';
+import { ImageBackground } from 'react-native';
 
 export default function Layout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Drawer
-        screenOptions={({ navigation }: { navigation: DrawerNavigationProps }) => ({
+        screenOptions={({ navigation }) => ({
           headerStyle: {
             backgroundColor: '#f4511e',
           },
@@ -32,7 +32,7 @@ export default function Layout() {
           }}
         />
         <Drawer.Screen
-          name="aboutUs"
+          name="AboutUs"
           options={{
             drawerLabel: 'About Us',
             title: 'About Us',

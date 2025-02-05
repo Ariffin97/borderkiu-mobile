@@ -2,13 +2,14 @@ import React from 'react';
 import { DrawerActions } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { DrawerNavigationProps } from '@/types';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
+import { ParamListBase } from '@react-navigation/native';
 
-type Props = {
-  navigation: DrawerNavigationProps;
+type HamburgerMenuProps = {
+  navigation: DrawerNavigationProp<ParamListBase>;
 };
 
-export const HamburgerMenu: React.FC<Props> = ({ navigation }) => {
+export default function HamburgerMenu({ navigation }: HamburgerMenuProps) {
   return (
     <TouchableOpacity
       onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
