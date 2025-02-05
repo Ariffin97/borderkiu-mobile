@@ -17,8 +17,8 @@ export default function BorderMap({ border }: BorderMapProps) {
     }, [border])
 
     return (
-        <View className="border">
-            {mapUrl && <Image source={{ uri: mapUrl }} style={{ width: '100%', aspectRatio: 1 }}
+        <View className='bg-white rounded-lg shadowflex-1 mx-2 bg-white'>
+            {mapUrl && <Image className='rounded-lg shadow' source={{ uri: mapUrl }} style={{ width: '100%', aspectRatio: 1 }}
             />}
         </View>
     )

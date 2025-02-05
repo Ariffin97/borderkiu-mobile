@@ -9,7 +9,7 @@ type BorderSelectorProps = {
 
 export default function BorderPicker({ borders, selectedBorder,setSelectedBorder }: BorderSelectorProps) {
     return (
-        <View className='border'>
+        <View className='bg-white shadow mx-2 rounded-lg'>
             <Picker
                 selectedValue={selectedBorder}
                 onValueChange={(value) => setSelectedBorder(value)}
