@@ -11,7 +11,6 @@ export default function BorderMap({ border }: BorderMapProps) {
     useEffect(() => {
         fetch(`https://www.borderkiu.com/api/latest-map/${border}`)
             .then(response => response.json())
-            // .then(result => setMapUrl(`https://www.borderkiu.com${result.imagePath}`))
             .then(result => setMapUrl(`https://www.borderkiu.com${result.imagePath}`))
             .catch(error => console.error('Error fetching data:', error));
     }, [border])

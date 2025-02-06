@@ -1,12 +1,15 @@
 import BorderData from '@/components/BorderData';
 import BorderMap from '@/components/BorderMap';
 import BorderPicker from '@/components/BorderPicker';
+import QueueTimeChart from '@/components/QueueTimeChart';
 import { useEffect, useState } from 'react';
-import { View, Text, Image, ImageBackground } from 'react-native';
+import { View, Text, Image, ImageBackground, ScrollView } from 'react-native';
 
 // Mock data
 const data = {
   'Miri(SungaiTujuh)': {
+    country1: 'Miri',
+    country2: 'Brunei',
     '1t2': {
       direction: 'Miri-Brunei',
       queueTime: 540000,
@@ -21,6 +24,8 @@ const data = {
     }
   },
   'KualaLurah(ICQSTedungan)': {
+    country1: 'Brunei',
+    country2: 'Limbang',
     '1t2': {
       direction: 'Brunei-Limbang',
       queueTime: 890889,
@@ -35,6 +40,8 @@ const data = {
     }
   },
   'UjungJalan(ICQSPandaruan)': {
+    country1: 'Temburung',
+    country2: 'Limbang',
     '1t2': {
       direction: 'Temburung-Limbang',
       queueTime: 823847,
@@ -61,6 +68,8 @@ export interface QueueData {
 interface BorderDirections {
   '1t2': QueueData;
   '2t1': QueueData;
+  country1: string;
+  country2: string;
 }
 
 export interface BorderDataMap {
@@ -93,14 +102,15 @@ export default function Home() {
   }, [selectedBorder])
 
   return (
-    <View className='flex p-2'>
+    <ScrollView className='flex p-2'>
       <BorderPicker borders={borders} selectedBorder={selectedBorder} setSelectedBorder={setSelectedBorder}/>
       {selectedBorderData && (
         <View>
           <BorderData data={selectedBorderData}/>
           <BorderMap border={selectedBorder}/>
+          <QueueTimeChart border={selectedBorder} country1={selectedBorderData.country1} country2={selectedBorderData.country2}/>
         </View>
       )}
-    </View>
+    </ScrollView>
   );
 }
