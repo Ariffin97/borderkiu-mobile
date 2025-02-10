@@ -4,10 +4,9 @@ import { Text, TextInput, TouchableOpacity, View } from "react-native";
 interface ChatBoxProps {
     border: string;
     chatHistory: ChatResponse | ErrorResponse;
-    callBack: any
 }
 
-export default function ChatBox({ border, chatHistory, callBack }: ChatBoxProps) {
+export default function ChatBox({ border, chatHistory }: ChatBoxProps) {
     const [message, setMessage] = useState<string>('');
 
     const onChange = (text: string) => setMessage(text);
@@ -31,10 +30,9 @@ export default function ChatBox({ border, chatHistory, callBack }: ChatBoxProps)
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            callBack(border);
             setMessage('');
         } catch (error) {
-            console.error('Error fetching chat history:', error);
+            console.error('Error sending message:', error);
         }
     };
 

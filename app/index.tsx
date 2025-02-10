@@ -81,7 +81,7 @@ export default function Home() {
   const [borders, setBorders] = useState<string[] | null>(null)
   const [selectedBorder, setSelectedBorder] = useState<string>('Miri(SungaiTujuh)');
   const [selectedBorderData, setSelectedBorderData] = useState<BorderDirections | null>(null);
-  const [borderChatHistory, setBorderChatHistory] = useState<ChatResponse | ErrorResponse>({error: 'No chat history available yet'});
+  const [borderChatHistory, setBorderChatHistory] = useState<ChatResponse | ErrorResponse>({ error: 'No chat history available yet' });
 
   // GET /api/borders mock
   useEffect(() => {
@@ -91,17 +91,16 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if(!borderData) return;
+    if (!borderData) return;
     const keys = Object.keys(borderData);
     setBorders(keys);
     setSelectedBorderData(borderData[selectedBorder]);
   }, [borderData]);
 
   useEffect(() => {
-    if(!selectedBorder || !borderData) return;
+    if (!selectedBorder || !borderData) return;
     setSelectedBorderData(borderData[selectedBorder])
   }, [selectedBorder])
-
   const fetchBorderChatHistory = async (border: string) => {
     try {
       const response = await fetch(`https://chat-xuou.onrender.com/api/chat/${border}`, {
@@ -131,17 +130,50 @@ export default function Home() {
   useEffect(() => {
     if(!selectedBorder) return;
     fetchBorderChatHistory(selectedBorder);
+
+    const ws = new WebSocket(`wss://chat-xuou.onrender.com/api/chat/${selectedBorder}`);
+  
+    ws.onopen = () => {
+      ws.send(JSON.stringify({ type: 'subscribe', borderName: selectedBorder }));
+    };
+  
+    ws.onmessage = (e) => {
+      try {
+        const data = JSON.parse(e.data);
+        if (data.type === 'update' && data.borderName === selectedBorder) {
+          fetchBorderChatHistory(selectedBorder)
+        }
+      } catch (error) {
+        console.error('Error parsing WebSocket message:', error);
+      }
+    };
+  
+    ws.onerror = (error) => {
+      console.error('WebSocket Error:', error);
+    };
+  
+    ws.onclose = () => {
+      console.log('WebSocket Disconnected');
+    };
+  
+    return () => {
+      ws.close();
+    };
   }, [selectedBorder])
+  
+    // Establish WebSocket connection for real-time updates
+    
+
 
   return (
     <ScrollView className='flex p-2'>
-      <BorderPicker borders={borders} selectedBorder={selectedBorder} setSelectedBorder={setSelectedBorder}/>
+      <BorderPicker borders={borders} selectedBorder={selectedBorder} setSelectedBorder={setSelectedBorder} />
       {selectedBorderData && (
         <View>
-          <BorderData data={selectedBorderData}/>
-          <BorderMap border={selectedBorder}/>
-          <QueueTimeChart border={selectedBorder} country1={selectedBorderData.country1} country2={selectedBorderData.country2}/>
-          <ChatBox border={selectedBorder} chatHistory={borderChatHistory} callBack={fetchBorderChatHistory}/>
+          <BorderData data={selectedBorderData} />
+          <BorderMap border={selectedBorder} />
+          <QueueTimeChart border={selectedBorder} country1={selectedBorderData.country1} country2={selectedBorderData.country2} />
+          <ChatBox border={selectedBorder} chatHistory={borderChatHistory} />
         </View>
       )}
     </ScrollView>
