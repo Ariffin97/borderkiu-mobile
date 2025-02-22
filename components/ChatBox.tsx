@@ -1,6 +1,7 @@
 import { ChatResponse, ErrorResponse } from "@/app";
-import { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { formatHumanReadable } from "@/utils/string-utils";
+import { useRef, useState } from "react";
+import { KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 interface ChatBoxProps {
     border: string;
     chatHistory: ChatResponse | ErrorResponse;
@@ -8,6 +9,7 @@ interface ChatBoxProps {
 
 export default function ChatBox({ border, chatHistory }: ChatBoxProps) {
     const [message, setMessage] = useState<string>('');
+    const scrollViewRef = useRef<ScrollView>(null);
 
     const onChange = (text: string) => setMessage(text);
 
@@ -37,27 +39,40 @@ export default function ChatBox({ border, chatHistory }: ChatBoxProps) {
     };
 
     return (
-        <View className='bg-white rounded-lg shadowflex-1 mx-2 mb-4 p-2 bg-white'>
-            <Text className='font-bold'>Live Chat ({border})</Text>
-            <View className='p-2'>
-                {('chat' in chatHistory)
-                    ? chatHistory.chat.map((message, index) => (
-                        <Text key={index}>{message}</Text>
-                    ))
-                    : <Text>Error: {chatHistory.error}</Text>
-                }
-            </View>
-            <View className="flex-row border border-gray-300 rounded-lg overflow-hidden">
-                <TextInput
-                    className="flex-1 h-12 px-3"
-                    value={message}
-                    onChangeText={onChange}
-                    placeholder="Enter your message"
-                    returnKeyType="send"
-                    returnKeyLabel="send"
-                    onSubmitEditing={sendMessage}
-                />
-            </View>
+      <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      className='flex-1'
+    >
+      <View className="bg-white rounded-lg shadow flex-1 mx-2 mb-4 p-2">
+        <Text className="font-bold">
+          Live Chat ({formatHumanReadable(border)})
+        </Text>
+        <ScrollView
+          className="p-2 flex-1 h-40"
+          nestedScrollEnabled={true}
+          contentContainerStyle={{ paddingBottom: 20 }}
+          ref={scrollViewRef}
+          onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
+        >
+          {('chat' in chatHistory)
+            ? chatHistory.chat.map((message, index) => (
+                <Text key={index}>{message}</Text>
+              ))
+            : <Text>Error: {chatHistory.error}</Text>
+          }
+        </ScrollView>
+        <View className="flex-row border border-gray-300 rounded-lg overflow-hidden">
+          <TextInput
+            className="flex-1 h-12 px-3"
+            value={message}
+            onChangeText={onChange}
+            placeholder="Enter your message"
+            returnKeyType="send"
+            returnKeyLabel="send"
+            onSubmitEditing={sendMessage}
+          />
         </View>
+      </View>
+    </KeyboardAvoidingView>
     )
 }
