@@ -7,6 +7,7 @@ import { formatUnixTimestamp } from '@/utils/time-utils';
 import { useEffect, useState } from 'react';
 import { View, ScrollView, Text, Keyboard } from 'react-native';
 import { GestureHandlerRootView, TouchableOpacity } from 'react-native-gesture-handler';
+import { ChartLine, MessageCircleMore } from 'lucide-react-native'
 import io from 'socket.io-client';
 
 const data = {
@@ -104,6 +105,7 @@ export default function Home() {
   const [showChatBox, setShowChatBox] = useState(false);
   const [showChart, setShowChart] = useState(false);
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+  const [undreadMessages, setUnreadMessages] = useState(0)
 
   // GET /api/borders mock
   useEffect(() => {
@@ -164,15 +166,14 @@ export default function Home() {
 
     socket.on('chat message', (message) => {
       console.log('Received new message:', message);
+      setUnreadMessages(undreadMessages => undreadMessages + 1);
       setBorderChatHistory((prevMessages: ChatState) => {
         if ('chat' in prevMessages) {
-          // It's a ChatResponse
           return {
             ...prevMessages,
             chat: [...prevMessages.chat, message]
           };
         } else {
-          // It's an ErrorResponse, return as is or handle accordingly
           return prevMessages;
         }
       });
@@ -195,50 +196,98 @@ export default function Home() {
     const keyboardHideListener = Keyboard.addListener('keyboardDidHide', () => {
       setIsKeyboardVisible(false);
     });
-  
+
     return () => {
       keyboardShowListener.remove();
       keyboardHideListener.remove();
     };
   }, []);
-  
 
+  const toggleChatBox = () => {
+    setShowChart(false);
+    setUnreadMessages(0);
+    setShowChatBox(!showChatBox);
+  }
+
+  const toggleChart = () => {
+    setShowChatBox(false);
+    setShowChart(!showChart);
+  }
   return (
     <GestureHandlerRootView className='flex-1'>
       {selectedBorderData && (
         <View className='flex-1'>
           <BorderMap coordinates={selectedBorderData?.coordinates} />
-          <View className='flex-1 py-10 mb-10'>
+          <View className='flex-1 pt-5 pb-10 mb-10'>
             <BorderPicker borders={borders} selectedBorder={selectedBorder} setSelectedBorder={setSelectedBorder} />
             <BorderData data={selectedBorderData} />
-            {showChatBox && <ChatBox border={selectedBorder} chatHistory={borderChatHistory} />}
-            {showChart && <QueueTimeChart border={selectedBorder} country1={selectedBorderData.country1} country2={selectedBorderData.country2} />}
+            {showChatBox &&
+              <ChatBox
+                border={selectedBorder}
+                chatHistory={borderChatHistory}
+                setShowChatBox={setShowChatBox}
+              />
+            }
+            {showChart &&
+              <QueueTimeChart
+                border={selectedBorder}
+                country1={selectedBorderData.country1}
+                country2={selectedBorderData.country2}
+                setShowChart={setShowChart}
+              />
+            }
           </View>
           {!isKeyboardVisible && (
             <View className='absolute bottom-3 right-2'>
-            <View className='flex-1 flex-row gap-3'>
+              <View className='flex-1 flex-column gap-3'>
                 <TouchableOpacity
-                  onPress={() => setShowChatBox(!showChatBox)}
-                  className='bg-blue-500 p-3 rounded-md w-32 items-center'
+                  onPress={toggleChatBox}
+                  style={{
+                    backgroundColor: 'white',
+                    shadowColor: "#000",
+                    shadowOffset: {
+                      width: 0,
+                      height: 1,
+                    },
+                    shadowOpacity: 0.1,
+                    shadowRadius: 1.5,
+                    elevation: 1,
+                    position: 'relative',
+                  }}
+                  className="rounded-full w-16 h-16 bg-white flex items-center justify-center"
                 >
-                  <Text className='text-white font-bold' numberOfLines={1} ellipsizeMode="tail">
-                    {showChatBox ? 'Hide Chat' : 'Show Chat'}
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => setShowChart(!showChart)}
-                  className='bg-blue-500 p-3 rounded-md w-32 items-center'
-                >
-                  <Text className='text-white font-bold' numberOfLines={1} ellipsizeMode="tail">
-                    {showChart ? 'Hide Chart' : 'Show Chart'}
-                  </Text>
+                  <MessageCircleMore color='gray' size={30} />
+                  {undreadMessages > 0 && (
+                    <View className="absolute top-0 right-0 bg-red-500 rounded-full min-w-[20px] h-[20px] flex items-center justify-center">
+                      <Text className="text-white text-xs font-bold">
+                        {undreadMessages > 99 ? '99+' : undreadMessages}
+                      </Text>
+                    </View>
+                  )}
                 </TouchableOpacity>
 
+                <TouchableOpacity
+                  onPress={toggleChart}
+                  style={{
+                    backgroundColor: 'white',
+                    shadowColor: "#000",
+                    shadowOffset: {
+                      width: 0,
+                      height: 1,
+                    },
+                    shadowOpacity: 0.1,
+                    shadowRadius: 1.5,
+                    elevation: 1
+                  }}
+                  className='rounded-full w-16 h-16 bg-gray-50 shadow flex items-center justify-center'
+                >
+                  <ChartLine color='gray' size={30} />
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
           )}
         </View>
       )}
     </GestureHandlerRootView>
   );
-}
+};

@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
-import { View, Dimensions } from 'react-native';
+import { View, Dimensions, TouchableOpacity } from 'react-native';
 import Svg, { Path, G, Text, Line } from 'react-native-svg';
 import * as d3 from 'd3';
+import { X } from 'lucide-react-native';
 
 interface QueueTimeChartProps {
     border: string;
     country1: string;
     country2: string;
+    setShowChart: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const QueueTimeChart = ({ border, country1, country2 }: QueueTimeChartProps) => {
+const QueueTimeChart = ({ border, country1, country2, setShowChart }: QueueTimeChartProps) => {
     const [chartData, setChartData] = useState<any>(null);
 
     useEffect(() => {
@@ -31,7 +33,7 @@ const QueueTimeChart = ({ border, country1, country2 }: QueueTimeChartProps) => 
     }
 
     const width = Dimensions.get('window').width - 60;
-    const height = 260;
+    const height = 300;
     const margin = { top: 30, right: 30, bottom: 50, left: 50 };
 
     const x = d3.scaleLinear()
@@ -51,8 +53,13 @@ const QueueTimeChart = ({ border, country1, country2 }: QueueTimeChartProps) => 
     const line2 = line(chartData.aryQueueTimes_2t1);
 
     return (
-        <View className='rounded-lg shadow flex-1 mx-2 mt-2 mb-4 justify-center align-center bg-black p-2'>
-            <Svg width={width} height={height} className='bg-black rounded-lg'>
+        <View
+            className='rounded-lg shadow flex-1 mx-2 z-50 p-2 align-center bg-white shadow items-center'
+        >
+            <TouchableOpacity className='self-end' onPress={() => setShowChart(false)}>
+                <X color="#5d6198" className='self-end' />
+            </TouchableOpacity>
+            <Svg width={width} height={height} className='rounded-lg'>
                 {/* y-axis labels */}
                 {y.ticks(5).map((tick) => (
                     <G key={tick}>
@@ -60,7 +67,6 @@ const QueueTimeChart = ({ border, country1, country2 }: QueueTimeChartProps) => 
                             x={margin.left - 10}
                             y={y(tick)}
                             fontSize={8}
-                            fill="white"
                             textAnchor="end"
                             alignmentBaseline="middle"
                         >
@@ -85,7 +91,6 @@ const QueueTimeChart = ({ border, country1, country2 }: QueueTimeChartProps) => 
                             <G key={i} transform={`translate(${x(i)},${height - margin.bottom}) rotate(-45)`}>
                                 <Text
                                     fontSize={8}
-                                    fill="white"
                                     textAnchor="end"
                                     dy={10}
                                     dx={-10}
@@ -108,14 +113,14 @@ const QueueTimeChart = ({ border, country1, country2 }: QueueTimeChartProps) => 
                     y1={height - margin.bottom}
                     x2={width - margin.right}
                     y2={height - margin.bottom}
-                    stroke="white"
+                    stroke="gray"
                 />
                 <Line
                     x1={margin.left}
                     y1={margin.top}
                     x2={margin.left}
                     y2={height - margin.bottom}
-                    stroke="white"
+                    stroke="gray"
                 />
 
                 {/* x-axis title*/}
@@ -123,7 +128,6 @@ const QueueTimeChart = ({ border, country1, country2 }: QueueTimeChartProps) => 
                     x={width / 2}
                     y={height - 10}
                     fontSize={10}
-                    fill="white"
                     textAnchor="middle"
                     dy={5}
                 >
@@ -135,7 +139,6 @@ const QueueTimeChart = ({ border, country1, country2 }: QueueTimeChartProps) => 
                     x={10}
                     y={height / 2}
                     fontSize={10}
-                    fill="white"
                     textAnchor="middle"
                     transform={`rotate(-90, 10, ${height / 2})`}
                 >

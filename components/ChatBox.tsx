@@ -2,53 +2,58 @@ import { ChatResponse, ErrorResponse } from "@/app";
 import { formatHumanReadable } from "@/utils/string-utils";
 import { useRef, useState } from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { X } from 'lucide-react-native';
 interface ChatBoxProps {
-    border: string;
-    chatHistory: ChatResponse | ErrorResponse;
+  border: string;
+  chatHistory: ChatResponse | ErrorResponse;
+  setShowChatBox: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export default function ChatBox({ border, chatHistory }: ChatBoxProps) {
-    const [message, setMessage] = useState<string>('');
-    const scrollViewRef = useRef<ScrollView>(null);
+export default function ChatBox({ border, chatHistory, setShowChatBox }: ChatBoxProps) {
+  const [message, setMessage] = useState<string>('');
+  const scrollViewRef = useRef<ScrollView>(null);
 
-    const onChange = (text: string) => setMessage(text);
+  const onChange = (text: string) => setMessage(text);
 
-    const sendMessage = async () => {
-        if (message.trim().length === 0) return;
+  const sendMessage = async () => {
+    if (message.trim().length === 0) return;
 
-        try {
-            const response = await fetch(`https://chat-xuou.onrender.com/api/chat/${border}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    message: message,
-                    deviceId: 'jjk'
-                })
-            });
+    try {
+      const response = await fetch(`https://chat-xuou.onrender.com/api/chat/${border}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: message,
+          deviceId: 'jjk'
+        })
+      });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-            setMessage('');
-        } catch (error) {
-            console.error('Error sending message:', error);
-        }
-    };
+      setMessage('');
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
+  };
 
-    return (
-      <KeyboardAvoidingView
+  return (
+    <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      className='flex-1'
+      className='flex-1 z-50'
     >
-      <View className="bg-white rounded-lg shadow flex-1 mx-2 mb-4 p-2">
-        <Text className="font-bold">
+      <View className="bg-white rounded-lg shadow flex-1 mx-2 p-2">
+        <TouchableOpacity onPress={() => setShowChatBox(false)}>
+          <X color="#5d6198" className='self-end' />
+        </TouchableOpacity>
+        <Text className="font-bold mb-2">
           Live Chat ({formatHumanReadable(border)})
         </Text>
         <ScrollView
-          className="p-2 flex-1 h-40"
+          className="p-2 flex-1 h-50"
           nestedScrollEnabled={true}
           contentContainerStyle={{ paddingBottom: 20 }}
           ref={scrollViewRef}
@@ -56,8 +61,8 @@ export default function ChatBox({ border, chatHistory }: ChatBoxProps) {
         >
           {('chat' in chatHistory)
             ? chatHistory.chat.map((message, index) => (
-                <Text key={index}>{message}</Text>
-              ))
+              <Text key={index}>{message}</Text>
+            ))
             : <Text>Error: {chatHistory.error}</Text>
           }
         </ScrollView>
@@ -70,9 +75,10 @@ export default function ChatBox({ border, chatHistory }: ChatBoxProps) {
             returnKeyType="send"
             returnKeyLabel="send"
             onSubmitEditing={sendMessage}
+            onFocus={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
           />
         </View>
       </View>
     </KeyboardAvoidingView>
-    )
+  )
 }

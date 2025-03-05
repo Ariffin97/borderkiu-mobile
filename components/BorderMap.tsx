@@ -37,5 +37,7 @@ export default function BorderMap({ coordinates }: BorderMapProps) {
 const styles = StyleSheet.create({
     map: {
         ...StyleSheet.absoluteFillObject,
+        bottom: -25
+        
     },
 });

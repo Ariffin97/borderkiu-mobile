@@ -11,7 +11,7 @@ export default function BorderData({ data }: BorderDataMap) {
         const formattedQueueLength = (data.queueLength / 1000).toFixed(1);
 
         return (
-            <View className="flex-1 mx-2 p-4 bg-white rounded-lg shadow">
+            <View className="flex-1 mx-2 p-4 bg-white rounded-lg shadow-lg">
                 <Text className="text-md text-center font-bold">{label}</Text>
                 <Text className="text-sm text-center">{formattedQueueTime}</Text>
                 <Text className="text-sm text-center">{formattedQueueLength}km</Text>

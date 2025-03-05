@@ -1,5 +1,6 @@
 import { View } from "react-native";
 import {Picker} from '@react-native-picker/picker';
+import { formatHumanReadable } from "@/utils/string-utils";
 
 type BorderSelectorProps = {
     borders: string[] | null,
@@ -16,7 +17,7 @@ export default function BorderPicker({ borders, selectedBorder,setSelectedBorder
             >
                 {borders && borders.map((item, index) => (
                     <Picker.Item 
-                        label={item}
+                        label={formatHumanReadable(item)}
                         value={item}
                         key={index}
                     />
