@@ -55,7 +55,7 @@ const QueueTimeChart = ({ border, country1, country2, setShowChart }: QueueTimeC
     return (
         <View className='rounded-lg shadow flex mx-2 z-50 p-2 align-center bg-white shadow items-center'>
             <TouchableOpacity className='self-end' onPress={() => setShowChart(false)}>
-                <X color="#5d6198" className='self-end' />
+                <X color="#5d6198" className='self-end'/>
             </TouchableOpacity>
             <Svg width={width} height={height + 60} className='rounded-lg'>
                 {/* y-axis labels */}

@@ -226,6 +226,7 @@ export default function Home() {
                 border={selectedBorder}
                 chatHistory={borderChatHistory}
                 setShowChatBox={setShowChatBox}
+                fetchBorderChatHistory={fetchBorderChatHistory}
               />
             }
             {showChart &&

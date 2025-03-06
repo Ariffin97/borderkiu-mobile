@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { Text, View } from "react-native";
 import {Picker} from '@react-native-picker/picker';
 import { formatHumanReadable } from "@/utils/string-utils";
 
