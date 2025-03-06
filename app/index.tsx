@@ -254,9 +254,9 @@ export default function Home() {
                     elevation: 1,
                     position: 'relative',
                   }}
-                  className="rounded-full w-16 h-16 bg-white flex items-center justify-center"
+                  className="rounded-full w-14 h-14 bg-white flex items-center justify-center"
                 >
-                  <MessageCircleMore color='gray' size={30} />
+                  <MessageCircleMore color='gray' size={35} />
                   {undreadMessages > 0 && (
                     <View className="absolute top-0 right-0 bg-red-500 rounded-full min-w-[20px] h-[20px] flex items-center justify-center">
                       <Text className="text-white text-xs font-bold">
@@ -279,9 +279,9 @@ export default function Home() {
                     shadowRadius: 1.5,
                     elevation: 1
                   }}
-                  className='rounded-full w-16 h-16 bg-gray-50 shadow flex items-center justify-center'
+                  className='rounded-full w-14 h-14 bg-gray-50 shadow flex items-center justify-center'
                 >
-                  <ChartLine color='gray' size={30} />
+                  <ChartLine color='gray' size={35} />
                 </TouchableOpacity>
               </View>
             </View>

@@ -53,13 +53,11 @@ const QueueTimeChart = ({ border, country1, country2, setShowChart }: QueueTimeC
     const line2 = line(chartData.aryQueueTimes_2t1);
 
     return (
-        <View
-            className='rounded-lg shadow flex-1 mx-2 z-50 p-2 align-center bg-white shadow items-center'
-        >
+        <View className='rounded-lg shadow flex mx-2 z-50 p-2 align-center bg-white shadow items-center'>
             <TouchableOpacity className='self-end' onPress={() => setShowChart(false)}>
                 <X color="#5d6198" className='self-end' />
             </TouchableOpacity>
-            <Svg width={width} height={height} className='rounded-lg'>
+            <Svg width={width} height={height + 60} className='rounded-lg'>
                 {/* y-axis labels */}
                 {y.ticks(5).map((tick) => (
                     <G key={tick}>
@@ -144,6 +142,36 @@ const QueueTimeChart = ({ border, country1, country2, setShowChart }: QueueTimeC
                 >
                     Queue Time (min)
                 </Text>
+
+                {/* Legend */}
+                <G transform={`translate(${margin.left}, ${height + 10})`}>
+                    {/* Legend for country1 */}
+                    <Line
+                        x1={0}
+                        y1={0}
+                        x2={20}
+                        y2={0}
+                        stroke="rgba(255, 99, 132, 1)"
+                        strokeWidth={2}
+                    />
+                    <Text x={25} y={5} fontSize={10} textAnchor="start">
+                        {country1} - {country2}
+                    </Text>
+
+                    {/* Legend for country2 */}
+                    <Line
+                        x1={0}
+                        y1={25}
+                        x2={20}
+                        y2={25}
+                        stroke="rgba(54, 162, 235, 1)"
+                        strokeWidth={2}
+                    />
+                    <Text x={25} y={30} fontSize={10} textAnchor="start">
+                        {country2} - {country1}
+                    </Text>
+                </G>
+
             </Svg>
         </View>
     );

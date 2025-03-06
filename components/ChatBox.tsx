@@ -2,7 +2,7 @@ import { ChatResponse, ErrorResponse } from "@/app";
 import { formatHumanReadable } from "@/utils/string-utils";
 import { useRef, useState } from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { X } from 'lucide-react-native';
+import { RefreshCcw, X } from 'lucide-react-native';
 interface ChatBoxProps {
   border: string;
   chatHistory: ChatResponse | ErrorResponse;
@@ -46,12 +46,24 @@ export default function ChatBox({ border, chatHistory, setShowChatBox }: ChatBox
       className='flex-1 z-50'
     >
       <View className="bg-white rounded-lg shadow flex-1 mx-2 p-2">
-        <TouchableOpacity onPress={() => setShowChatBox(false)}>
-          <X color="#5d6198" className='self-end' />
-        </TouchableOpacity>
-        <Text className="font-bold mb-2">
-          Live Chat ({formatHumanReadable(border)})
-        </Text>
+
+        <View className="flex flex-row justify-between p-2">
+
+          <Text className="font-bold mb-2">
+            Live Chat ({formatHumanReadable(border)})
+          </Text>
+
+          <View className="flex flex-row justify-end gap-2">
+            <TouchableOpacity onPress={() => setShowChatBox(false)}>
+              <RefreshCcw color="#5d6198" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setShowChatBox(false)}>
+              <X color="#5d6198" />
+            </TouchableOpacity>
+          </View>
+
+        </View>
+        
         <ScrollView
           className="p-2 flex-1 h-50"
           nestedScrollEnabled={true}
