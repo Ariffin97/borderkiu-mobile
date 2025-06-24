@@ -1,21 +1,27 @@
 {
   "expo": {
-    "name": "borderkiu_mobile",
-    "slug": "borderkiu_mobile",
-    "version": "1.0.0",
+    "name": "BorderKiu",
+    "slug": "borderkiu",
+    "version": "2.0.0",
+    "sdkVersion": "53.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "borderkiu",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "description": "Real-time border crossing queue times and community updates for seamless travel planning",
+    "primaryColor": "#1e40af",
+    "backgroundColor": "#ffffff",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.borderkiu.mobile"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#1e40af"
       },
+      "package": "com.borderkiu.mobile",
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyCcjdlQ2KWJV5VTD1aZfeyKFycFHcoBwpE"
@@ -35,7 +41,7 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#1e40af"
         }
       ]
     ],
@@ -45,7 +51,15 @@
     "splash": {
       "image": "./assets/images/borderkiu-logo.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#1e40af"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "borderkiu-mobile"
+      }
     }
   }
 }
